@@ -91,7 +91,10 @@
           term.push(["test_rpc.php", {
             send: function(text) {
               var parts = text.split('::');
-              term.clear().echo(parts[0]);
+              term.clear();
+              if (parts[0].trim()) {
+                term.echo(parts[0]);
+              }
               if (parts.length === 3) {
                 term.pause();
                 setTimeout(function() {

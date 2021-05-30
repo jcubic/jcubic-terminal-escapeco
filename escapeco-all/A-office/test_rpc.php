@@ -54,6 +54,8 @@ class Demo {
       case 2:
         return '[[ send "his password is secret::logs::1000" ]]';
       case 'exit':
+        return '[[ send "::clear" ]]';
+      case '__bug__':
         return '';
       default:
         throw new Error('Invalid choice');
