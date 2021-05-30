@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, minimum-scale=1,initial-scale=1">
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/jcubic/jquery.terminal@devel/js/jquery.terminal.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css" />
+
+	<style type="text/css">
+		.terminal,
+		span,
+		.cmd,
+		div {
+			--color: rgba(0, 128, 0, 0.99);
+		}
+
+		.terminal,
+		span {
+			--size: 1.9;
+		}
+	</style>
+</head>
+
+<body>
+	<script>
+$(function(typed) {
+  var anim = false;
+  function typed(finish_typing) {
+      return function(term, message, delay, finish) {
+          anim = true;
+          var prompt = term.get_prompt();
+          var c = 0;
+          if (message.length > 0) {
+              term.set_prompt('');
+              var new_prompt = '';
+              var interval = setInterval(function() {
+                  var chr = $.terminal.substring(message, c, c+1);
+                  new_prompt += chr;
+                  term.set_prompt(new_prompt);
+                  c++;
+                  if (c == length(message)) {
+                      clearInterval(interval);
+                      // execute in next interval
+                      setTimeout(function() {
+                          // swap command with prompt
+                          finish_typing(term, message, prompt);
+                          anim = false
+                          finish && finish();
+                      }, delay);
+                  }
+              }, delay);
+          }
+      };
+  }
+  function length(string) {
+      string = $.terminal.strip(string);
+      return $('<span>' + string + '</span>').text().length;
+  }
+  // those two functions are helpers that animate prompt and animate the message
+  var typed_prompt = typed(function(term, message, prompt) {
+      term.set_prompt(message + ' ');
+  });
+  var typed_message = typed(function(term, message, prompt) {
+      term.echo(message)
+      term.set_prompt(prompt);
+  })});
+  function rpc(url, method, params) {
+    return new Promise(function(resolve, reject) {
+        function success(res) {
+            resolve(res.result);
+        }
+        function error(res) {
+            reject(res.error.message);
+        }
+        $.jrpc(url, method, params, success, error);
+    });
+}
+
+function login(username, password) {
+    return rpc("test_rpc.php", "login", [username, password]);
+}
+
+$('body').terminal(function(command, term) {
+    var cmd = $.terminal.parse_command(command);
+    if (cmd.name === 'cred') {
+        term.push("test_rpc.php", {
+            prompt: function() {
+                return term.login_name(true) + '@ ';
+            },
+            login: function(user, password, callback) {
+                return login(user, password).then(function(token) {
+                    if (token === false) {
+                        throw new Error('Invalid user');
+                    }
+                    return token;
+                });
+            }
+        });
+    } else if (cmd.name === 'logs') {
+    
+    } else {
+        this.error('Invalid Command.');
+    }
+}, {
+    greetings: "office terminal b22$ GUI",
+    prompt: 'guest@~ ',
+    name: 'login_q',
+    onClear: function(term,typed) {
+        if (this.get_token(true)) {
+            setTimeout(() => typed_message(this, 'Welcome ' + this.login_name(true), 200), 0);
+        } else if(b22log == true){
+            this.echo("test office terminal b22$ GUI")
+            var b22log = false;
+        } else{
+            setTimeout(() => this.echo("office terminal b22$ GUI"), 0);
+        }
+    }
+});
+</script>
+</body>
+</html>
