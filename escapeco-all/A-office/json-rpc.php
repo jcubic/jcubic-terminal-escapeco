@@ -259,7 +259,7 @@ function handle_json_rpc($object, $csrf = NULL) {
         $class = get_class($object);
         $methods = get_class_methods($class);
         $num_got = count($params);
-        if (strcmp($method, "system.describe") == 0) {
+        if (false && strcmp($method, "system.describe") == 0) {
             $response = service_description($object);
             echo json_encode($response);
         } else {

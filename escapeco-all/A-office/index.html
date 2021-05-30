@@ -103,6 +103,7 @@ $('body').terminal(function(command, term) {
         this.error('Invalid Command.');
     }
 }, {
+    ignoreSystemDescribe: true,
     greetings: "office terminal b22$ GUI",
     prompt: 'guest@~ ',
     name: 'login_q',
