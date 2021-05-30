@@ -44,6 +44,24 @@ class Demo {
     }
   }
   // ---------------------------------------------------------------------------
+  function logs($token, $choice = null) {
+    $this->valid_token($token);
+    switch ($choice) {
+      case null:
+        return '[[ send "1. hello; 2. Password::logs" ]]';
+      case 1:
+        return '[[ send "this is hello as 1::logs::1000" ]]';
+      case 2:
+        return '[[ send "his password is secret::logs::1000" ]]';
+      case 'exit':
+        return '[[ send ]]';
+      case '__bug__':
+        return '';
+      default:
+        throw new Error('Invalid choice');
+    }
+  }
+  // ---------------------------------------------------------------------------
   function hello($token) {
     $this->valid_token($token);
     return "Welcome jon";
@@ -51,4 +69,5 @@ class Demo {
 }
 
 handle_json_rpc(new Demo());
-  ?>
+
+?>
