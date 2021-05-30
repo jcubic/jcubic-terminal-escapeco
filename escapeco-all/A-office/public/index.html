@@ -97,8 +97,6 @@ $('body').terminal(function(command, term) {
                 });
             }
         });
-    } else if (cmd.name === 'logs') {
-    
     } else {
         this.error('Invalid Command.');
     }
@@ -109,9 +107,6 @@ $('body').terminal(function(command, term) {
     onClear: function(term,typed) {
         if (this.get_token(true)) {
             setTimeout(() => typed_message(this, 'Welcome ' + this.login_name(true), 200), 0);
-        } else if(b22log == true){
-            this.echo("test office terminal b22$ GUI")
-            var b22log = false;
         } else{
             setTimeout(() => this.echo("office terminal b22$ GUI"), 0);
         }
