@@ -54,7 +54,7 @@ class Demo {
       case 2:
         return '[[ send "his password is secret::logs::1000" ]]';
       case 'exit':
-        return '[[ send "::clear" ]]';
+        return '[[ send ]]';
       case '__bug__':
         return '';
       default:
