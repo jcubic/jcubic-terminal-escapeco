@@ -24,7 +24,7 @@
 
 <body>
 	<script>
-$(function(typed) {
+(function() {
   var anim = false;
   function typed(finish_typing) {
       return function(term, message, delay, finish) {
@@ -53,18 +53,22 @@ $(function(typed) {
           }
       };
   }
+
   function length(string) {
       string = $.terminal.strip(string);
       return $('<span>' + string + '</span>').text().length;
   }
+
   // those two functions are helpers that animate prompt and animate the message
   var typed_prompt = typed(function(term, message, prompt) {
       term.set_prompt(message + ' ');
   });
+
   var typed_message = typed(function(term, message, prompt) {
       term.echo(message)
       term.set_prompt(prompt);
-  })});
+  });
+
   function rpc(url, method, params) {
     return new Promise(function(resolve, reject) {
         function success(res) {
@@ -75,27 +79,38 @@ $(function(typed) {
         }
         $.jrpc(url, method, params, success, error);
     });
-}
+  }
 
-function login(username, password) {
-    return rpc("test_rpc.php", "login", [username, password]);
-}
+  function login(username, password) {
+      return rpc("test_rpc.php", "login", [username, password]);
+  }
 
-$('body').terminal(function(command, term) {
-    var cmd = $.terminal.parse_command(command);
-    if (cmd.name === 'cred') {
-        term.push("test_rpc.php", {
-            prompt: function() {
-                return term.login_name(true) + '@ ';
-            },
-            login: function(user, password, callback) {
-                return login(user, password).then(function(token) {
-                    if (token === false) {
-                        throw new Error('Invalid user');
-                    }
-                    return token;
+  $('body').terminal(function(command, term) {
+      var cmd = $.terminal.parse_command(command);
+      if (cmd.name === 'cred') {
+          term.push(["test_rpc.php", {
+            send: function(text) {
+              if (!text) {
+                return;
+              }
+              var parts = text.split('::');
+              term.clear().echo(parts[0]);
+              if (parts.length === 3) {
+                term.pause();
+                setTimeout(function() {
+                  term.clear().resume();
+                  term.echo('[[' + parts[1] + ']]', true);
+                }, +parts[2]);
+              } else if (parts.length === 2) {
+                term.push((choice) => {
+                  term.pop().clear();
+                  term.echo('[[' + parts[1] + ' ' + choice + ']]', true);
+                }, {
+                  prompt: '? '
                 });
+              }
             }
+<<<<<<< HEAD:escapeco-all/A-office/index.html
         });
     } else if (cmd.name === 'logs') {
     
@@ -118,6 +133,33 @@ $('body').terminal(function(command, term) {
         }
     }
 });
+=======
+          }], {
+              prompt: function() {
+                  return term.login_name(true) + '@ ';
+              },
+              login: function(user, password, callback) {
+                  return login(user, password).then(function(token) {
+                      if (token === false) {
+                          throw new Error('Invalid user');
+                      }
+                      return token;
+                  });
+              }
+          });
+      } else {
+          this.error('Invalid Command.');
+      }
+  }, {
+      greetings: "office terminal b22$ GUI",
+      prompt: 'guest@~ ',
+      invokeMethods: true,
+      name: 'login_q',
+      checkArity: false
+  });
+
+})();
+>>>>>>> ac6fc94709459de0f182c9034d9993b9b714f161:escapeco-all/A-office/index.html
 </script>
 </body>
 </html>

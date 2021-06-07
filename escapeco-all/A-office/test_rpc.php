@@ -48,7 +48,11 @@ class Demo {
     $this->valid_token($token);
     switch ($choice) {
       case null:
+<<<<<<< HEAD
         return '[[ send "1. hello\n 2. Password::logs" ]]';
+=======
+        return '[[ send "1. hello; 2. Password::logs" ]]';
+>>>>>>> ac6fc94709459de0f182c9034d9993b9b714f161
       case 1:
         return '[[ send "this is hello as 1::logs::1000" ]]';
       case 2:
