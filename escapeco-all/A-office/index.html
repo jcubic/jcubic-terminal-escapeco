@@ -4,7 +4,7 @@
 <head><meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, minimum-scale=1,initial-scale=1">
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/jcubic/jquery.terminal@devel/js/jquery.terminal.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery.terminal@2.25.1/js/jquery.terminal.min.js"></script>
 	<link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css" />
 
 	<style type="text/css">
@@ -94,44 +94,23 @@
                 return;
               }
               var parts = text.split('::');
-              term.clear().echo(parts[0]);
-              if (parts.length === 3) {
-                term.pause();
-                setTimeout(function() {
-                  term.clear().resume();
-                  term.echo('[[' + parts[1] + ']]', true);
-                }, +parts[2]);
-              } else if (parts.length === 2) {
-                term.push((choice) => {
-                  term.pop().clear();
-                  term.echo('[[' + parts[1] + ' ' + choice + ']]', true);
-                }, {
-                  prompt: '? '
-                });
-              }
+              term.clear().typing('echo', 400, parts[0], function() {
+                  if (parts.length === 3) {
+                      term.pause();
+                      setTimeout(function() {
+                          term.clear().resume();
+                          term.echo('[[' + parts[1] + ']]');
+                      }, +parts[2]);
+                  } else if (parts.length === 2) {
+                      term.push((choice) => {
+                          term.pop().clear();
+                          term.echo('[[' + parts[1] + ' ' + choice + ']]');
+                      }, {
+                          prompt: '? '
+                      });
+                  }
+              });
             }
-        });
-    } else if (cmd.name === 'logs') {
-    
-    } else {
-        this.error('Invalid Command.');
-    }
-}, {
-    ignoreSystemDescribe: true,
-    greetings: "office terminal b22$ GUI",
-    prompt: 'guest@~ ',
-    name: 'login_q',
-    onClear: function(term,typed) {
-        if (this.get_token(true)) {
-            setTimeout(() => typed_message(this, 'Welcome ' + this.login_name(true), 200), 0);
-        } else if(b22log == true){
-            this.echo("test office terminal b22$ GUI")
-            var b22log = false;
-        } else{
-            setTimeout(() => this.echo("office terminal b22$ GUI"), 0);
-        }
-    }
-});
           }], {
               prompt: function() {
                   return term.login_name(true) + '@ ';
