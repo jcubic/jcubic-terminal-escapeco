@@ -8,15 +8,8 @@
 	<link rel="stylesheet" href="https://unpkg.com/jquery.terminal/css/jquery.terminal.min.css" />
 
 	<style type="text/css">
-		.terminal,
-		span,
-		.cmd,
-		div {
+		.terminal {
 			--color: rgba(0, 128, 0, 0.99);
-		}
-
-		.terminal,
-		span {
 			--size: 1.9;
 		}
 	</style>
@@ -25,64 +18,9 @@
 <body>
 	<script>
 (function() {
-  var anim = false;
-  function typed(finish_typing) {
-      return function(term, message, delay, finish) {
-          anim = true;
-          var prompt = term.get_prompt();
-          var c = 0;
-          if (message.length > 0) {
-              term.set_prompt('');
-              var new_prompt = '';
-              var interval = setInterval(function() {
-                  var chr = $.terminal.substring(message, c, c+1);
-                  new_prompt += chr;
-                  term.set_prompt(new_prompt);
-                  c++;
-                  if (c == length(message)) {
-                      clearInterval(interval);
-                      // execute in next interval
-                      setTimeout(function() {
-                          // swap command with prompt
-                          finish_typing(term, message, prompt);
-                          anim = false
-                          finish && finish();
-                      }, delay);
-                  }
-              }, delay);
-          }
-      };
-  }
-
-  function length(string) {
-      string = $.terminal.strip(string);
-      return $('<span>' + string + '</span>').text().length;
-  }
-
-  // those two functions are helpers that animate prompt and animate the message
-  var typed_prompt = typed(function(term, message, prompt) {
-      term.set_prompt(message + ' ');
-  });
-
-  var typed_message = typed(function(term, message, prompt) {
-      term.echo(message)
-      term.set_prompt(prompt);
-  });
-
-  function rpc(url, method, params) {
-    return new Promise(function(resolve, reject) {
-        function success(res) {
-            resolve(res.result);
-        }
-        function error(res) {
-            reject(res.error.message);
-        }
-        $.jrpc(url, method, params, success, error);
-    });
-  }
 
   function login(username, password) {
-      return rpc("test_rpc.php", "login", [username, password]);
+      return $.rpc("test_rpc.php", "login", [username, password]);
   }
 
   $('body').terminal(function(command, term) {
