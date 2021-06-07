@@ -50,7 +50,7 @@ class Demo {
     $this->valid_token($token);
     switch ($choice) {
       case null:
-        echo('[[ send "1. \\n2. \\n3. ::logs" ]]');
+        return '[[ send "1. \\n2. \\n3. ::logs" ]]';
       case 1:
         return '[[ send " ::logs::10000" ]]';
       case 2:
