@@ -44,15 +44,17 @@ class Demo {
     }
   }
   // ---------------------------------------------------------------------------
+  
+  // ---------------------------------------------------------------------------
   function logs($token, $choice = null) {
     $this->valid_token($token);
     switch ($choice) {
       case null:
-        return '[[ send "1. hello\n 2. Password::logs" ]]';
+        echo('[[ send "1. \\n2. \\n3. ::logs" ]]');
       case 1:
-        return '[[ send "this is hello as 1::logs::1000" ]]';
+        return '[[ send " ::logs::10000" ]]';
       case 2:
-        return '[[ send "his password is secret::logs::1000" ]]';
+        return '[[ send " ::logs::1000" ]]';
       case 'exit':
         return '[[ send ]]';
       case '__bug__':
