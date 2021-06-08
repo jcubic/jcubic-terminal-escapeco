@@ -1,7 +1,7 @@
 <?php
 require('json-rpc.php');
 $logs = array(
-  "Logs //n1. //n2. //n3.",
+  "Logs \nn1. \nn2. \nn3.",
   "log 1 is corupt",
   "log 2 empty",
   "log 3 failed to startup"
@@ -31,19 +31,16 @@ class Demo {
     return get_user($username) != null;
   }
   // ---------------------------------------------------------------------------
-  function logs($token, $choice = 0) {
-    $this->valid_token($token);
-    global $logs;
-    if (isset($logs[$choice])) {
-      $log = $logs[$choice];
-      if ($choice == 0) {
-        return '[[ send "$log::logs" ]]';
-      } else {
-        return '[[ send "$log::logs::1000" ]]';
-      }
-    } else {
-      throw new Error('Invalid choice');
+  function login($username, $password) {
+    $user = get_user($username);
+    if ($user == null) {
+      return false;
     }
+    if ($user['password'] != $password) {
+      return null;
+    }
+    $_SESSION['token'] = md5(time());
+    return $_SESSION['token'];
   }
   // ---------------------------------------------------------------------------
   function valid_token($token) {
@@ -52,16 +49,15 @@ class Demo {
     }
   }
   // ---------------------------------------------------------------------------
-  
   function logs($token, $choice = 0) {
     $this->valid_token($token);
     global $logs;
     if (isset($logs[$choice])) {
       $log = $logs[$choice];
       if ($choice == 0) {
-        return '[[ send "${$log}::logs" ]]';
+        return "[[ send '$log::logs' ]]";
       } else {
-        return '[[ send "${$log}::logs::1000" ]]';
+        return "[[ send '$log::logs::1000' ]]";
       }
     } else {
       throw new Error('Invalid choice');
